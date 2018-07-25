@@ -20,8 +20,10 @@ class MongoStorage(object):
         pass
 
     def deploy_service(self,user,service_name,sites,type="cloudbone",cloud="aliyun",ip="0.0.0.0"):
-        self.database.services.insert_one({"user":user,"service_name":service_name,"sites":sites,"type":type,"cloud":cloud,"ip":ip})
-        return True
+        result =self.database.services.insert_one({"user":user,"service_name":service_name,"sites":sites,"type":type,"cloud":cloud,"ip":ip})
+        # print(result)
+        print(result.inserted_id)
+        return result.inserted_id
 
     def update_service(self,id,update_json):
         self.database.get_collection("services").find_one_and_update({"_id":ObjectId(id)},{"$set" : update_json})
