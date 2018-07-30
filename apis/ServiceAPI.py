@@ -74,7 +74,7 @@ class ServiceDetailAPI(Resource):
             del result['_id']
             result['sites'] = json.loads(result['sites'])
 
-            return {'result':result}, 200
+            return result, 200
         except Exception as e:
             return {'result': 'fail', "reason": str(e)}, 400
 

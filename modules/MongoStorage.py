@@ -1,6 +1,7 @@
 import requests
 import yaml
 from bson import ObjectId
+from datetime import datetime
 from pymongo import MongoClient
 
 config=yaml.load(open('config.yaml', 'r'))
@@ -20,7 +21,10 @@ class MongoStorage(object):
         pass
 
     def deploy_service(self,user,service_name,sites,type="cloudbone",cloud="aliyun",ip="0.0.0.0"):
-        result =self.database.services.insert_one({"user":user,"service_name":service_name,"sites":sites,"type":type,"cloud":cloud,"ip":ip})
+
+        time_now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        result =self.database.services.insert_one({"user":user,"service_name":service_name,"sites":sites,"type":type,"cloud":cloud,"ip":ip,"status":"submitted"
+                                                   ,"logs":[], "time":time_now})
         # print(result)
         print(result.inserted_id)
         return result.inserted_id
@@ -39,3 +43,12 @@ class MongoStorage(object):
 
     def get_service(self,id):
         return self.database.get_collection("services").find_one({"_id":ObjectId(id)})
+
+    def add_logs(self,id,logs):
+        time_now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        old_data = self.database.get_collection("services").find_one({"_id": ObjectId(id)})
+        log = {"time":time_now,"log":logs}
+        new_log = old_data['logs']
+        new_log.append(log)
+        self.database.get_collection("services").find_one_and_update({"_id":ObjectId(id)},{"$set" : {"logs":new_log}})
+        return True
