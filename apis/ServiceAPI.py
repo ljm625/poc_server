@@ -30,7 +30,7 @@ class ServiceAPI(Resource):
                 service['id']=str(service['_id'])
                 del service['_id']
                 service['self']="/api/v1/services/{}".format(service['id'])
-                service['sites']=json.loads(service['sites'])
+                # service['sites']=json.loads(service['sites'])
             return services, 200
 
         except Exception as e:
@@ -52,7 +52,7 @@ class ServiceAPI(Resource):
         args=req.parse_args()
         try:
             mongo = MongoStorage()
-            result = mongo.deploy_service(args['user'],args['service_name'],json.dumps(args['sites']),args['type'],args['cloud'])
+            result = mongo.deploy_service(args['user'],args['service_name'],args['sites'],args['type'],args['cloud'])
             return {"id":str(result)}, 200
         except Exception as e:
             return {'result': 'fail', "reason": str(e)}, 400
@@ -72,7 +72,7 @@ class ServiceDetailAPI(Resource):
             result = mongo.get_service(service_id)
             result['id'] = str(result['_id'])
             del result['_id']
-            result['sites'] = json.loads(result['sites'])
+            # result['sites'] = json.loads(result['sites'])
 
             return result, 200
         except Exception as e:
