@@ -27,6 +27,7 @@ class MongoStorage(object):
                                                    ,"logs":[], "time":time_now})
         # print(result)
         print(result.inserted_id)
+        self.add_logs(result.inserted_id,"提交服务创建请求")
         return result.inserted_id
 
     def update_service(self,id,update_json):
@@ -51,4 +52,8 @@ class MongoStorage(object):
         new_log = old_data['logs']
         new_log.append(log)
         self.database.get_collection("services").find_one_and_update({"_id":ObjectId(id)},{"$set" : {"logs":new_log}})
+        return True
+
+    def update_status(self,id,status):
+        self.update_service(id,{"status":status})
         return True

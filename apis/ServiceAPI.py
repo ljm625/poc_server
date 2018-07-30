@@ -53,6 +53,7 @@ class ServiceAPI(Resource):
         try:
             mongo = MongoStorage()
             result = mongo.deploy_service(args['user'],args['service_name'],args['sites'],args['type'],args['cloud'])
+
             return {"id":str(result)}, 200
         except Exception as e:
             return {'result': 'fail', "reason": str(e)}, 400
