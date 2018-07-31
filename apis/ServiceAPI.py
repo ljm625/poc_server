@@ -4,6 +4,7 @@ from flask_restful import Resource, reqparse
 import yaml
 
 from modules.MongoStorage import MongoStorage
+from modules.ServiceCreation import ServiceCreation
 
 
 class ServiceAPI(Resource):
@@ -53,7 +54,8 @@ class ServiceAPI(Resource):
         try:
             mongo = MongoStorage()
             result = mongo.deploy_service(args['user'],args['service_name'],args['sites'],args['type'],args['cloud'])
-
+            svc = ServiceCreation(str(result),args['service_name'])
+            svc.start()
             return {"id":str(result)}, 200
         except Exception as e:
             return {'result': 'fail', "reason": str(e)}, 400
