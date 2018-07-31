@@ -13,10 +13,8 @@ class ServiceCreation(Process):
         self.service_name =  service_name
         self.cc = CloudCenterControl()
 
-        pass
-
     def create_cloud_center_vm(self):
-        result = self.cc.create_jobs(self.service_name,"WQxsca!@#sadwdaSSSX213")
+        result = self.cc.create_jobs("poc_"+self.service_id,"WQxsca!@#sadwdaSSSX213")
         id = result['id']
         self.mongo.add_logs(self.service_id,"提交云端创建请求")
         return id
