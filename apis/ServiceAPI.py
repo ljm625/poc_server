@@ -5,6 +5,7 @@ import yaml
 
 from modules.MongoStorage import MongoStorage
 from modules.ServiceCreation import ServiceCreation
+from modules.ServiceTermination import ServiceTermination
 
 
 class ServiceAPI(Resource):
@@ -112,7 +113,10 @@ class ServiceDetailAPI(Resource):
         """
         try:
             mongo = MongoStorage()
-            result = mongo.delete_service(service_id)
-            return {'result':result}, 200
+            service=mongo.get_service(service_id)
+            svc = ServiceTermination(service_id,service['service_name'])
+            svc.start()
+            # result = mongo.delete_service(service_id)
+            return {'result':"success"}, 200
         except Exception as e:
             return {'result': 'fail', "reason": str(e)}, 400
